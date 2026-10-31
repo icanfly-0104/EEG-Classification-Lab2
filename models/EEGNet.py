@@ -7,9 +7,13 @@ class EEGNet(nn.Module):
     def __init__(self, dropout=0.25, activation="elu", elu_alpha=1.0, f1=16, d=2, f2=None,
                  temporal_kernel=51, separable_kernel=15, pool1=4, pool2=8):
         super(EEGNet, self).__init__()
+        
+        # F2 settings
         f2 = f1 * d if f2 is None else f2
         if min(temporal_kernel, separable_kernel, pool1, pool2) < 1:
             raise ValueError("Kernel widths and pooling widths must be positive integers.")
+
+        # Activation settings
         activations = {
             "elu": lambda: nn.ELU(alpha=elu_alpha),
             "relu": nn.ReLU,
@@ -19,12 +23,14 @@ class EEGNet(nn.Module):
             raise ValueError(f"Unsupported activation: {activation}")
         act = activations[activation]
 
+        # Conv2D settings
         self.firstconv = nn.Sequential(
             nn.Conv2d(1, f1, kernel_size=(1, temporal_kernel),
                       padding=(0, temporal_kernel // 2), bias=False),
             nn.BatchNorm2d(f1),
         )
 
+        # DepthwiseConv2D settings
         self.depthwiseConv = nn.Sequential(
             nn.Conv2d(f1, f1 * d, kernel_size=(2, 1), groups=f1, bias=False),
             nn.BatchNorm2d(f1 * d),
@@ -33,6 +39,7 @@ class EEGNet(nn.Module):
             nn.Dropout(dropout),
         )
 
+        # SeparableConv2D settings
         self.separableConv = nn.Sequential(
             nn.Conv2d(f1 * d, f1 * d,
                 kernel_size=(1, separable_kernel),
@@ -47,6 +54,7 @@ class EEGNet(nn.Module):
             nn.Dropout(dropout),
         )
 
+        # Classify settings
         self.classify = nn.LazyLinear(2)
 
     def forward(self, x):

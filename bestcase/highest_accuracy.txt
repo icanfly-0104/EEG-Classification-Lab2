@@ -1,0 +1,22 @@
+Best validation loss: 0.06665079
+Validation accuracy at selected checkpoint: 100.00%
+Selected checkpoint epoch: 397
+Final test accuracy (evaluated once): 88.70%
+Activation: leaky_relu
+ELU alpha: 1.0
+Dropout: 0.25
+Learning rate: 0.001
+Batch size: 64
+Epochs: 500
+Validation split: 0.05
+Optimizer: Adam
+Loss: CrossEntropyLoss
+Weight decay: 0.001
+Seed: 42
+F1: 16
+Depth multiplier: 3
+F2: 32
+Temporal kernel: 51
+Separable kernel: 15
+Pool1: 8
+Pool2: 8
